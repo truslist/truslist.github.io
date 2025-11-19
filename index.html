@@ -1,274 +1,86 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TrusList: An Open & Trustworthy Domain Ranking System</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>TrusList — Trusted Domain Top List</title>
+    <!-- 引入美观字体 -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #3498db;
-            --secondary-color: #2c3e50;
-            --accent-color: #e74c3c;
-            --text-color: #333;
-            --light-bg: #f8f8f8;
-            --dark-bg: #ecf0f1;
-        }
-
-        body {
-            font-family: 'Open Sans', sans-serif;
-            line-height: 1.7;
-            margin: 0;
-            padding: 0;
-            background-color: var(--light-bg);
-            color: var(--text-color);
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            background-color: var(--secondary-color);
-            color: #fff;
-            padding: 60px 20px;
-            text-align: center;
-            border-bottom: 5px solid var(--primary-color);
-        }
-
-        header h1 {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 3.8em;
-            margin: 0;
-            letter-spacing: 2px;
-        }
-
-        header p {
-            font-size: 1.4em;
-            margin-top: 15px;
-            opacity: 0.9;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .section {
-            background-color: #fff;
-            padding: 50px 40px;
-            margin-bottom: 25px;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-            animation: slideUp 0.8s ease-out forwards;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        .section:nth-of-type(1) { animation-delay: 0.1s; }
-        .section:nth-of-type(2) { animation-delay: 0.2s; }
-        .section:nth-of-type(3) { animation-delay: 0.3s; }
-        .section:nth-of-type(4) { animation-delay: 0.4s; }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .section h2 {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 2.2em;
-            color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        .section h2::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: -10px;
-            width: 70px;
-            height: 3px;
-            background-color: var(--accent-color);
-            border-radius: 2px;
-        }
-
-        .section p {
-            font-size: 1.1em;
-            color: var(--text-color);
-            text-align: justify;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
-            text-align: left;
-        }
-
-        .feature-item {
-            background-color: var(--dark-bg);
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .feature-item h3 {
-            font-family: 'Montserrat', sans-serif;
-            color: var(--secondary-color);
-            font-size: 1.4em;
-            margin-top: 0;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-
-        .feature-item p {
-            font-size: 1em;
-            color: #555;
-        }
-
-        .cta-buttons {
-            text-align: center;
-            margin-top: 40px;
-        }
-
-        .cta-buttons a {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: #fff;
-            padding: 15px 35px;
-            border-radius: 7px;
-            text-decoration: none;
-            font-size: 1.2em;
-            font-weight: 600;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            margin: 10px;
-        }
-
-        .cta-buttons a:hover {
-            background-color: #2980b9;
-            transform: translateY(-3px);
-        }
-
-        .cta-buttons a.secondary {
-            background-color: var(--accent-color);
-        }
-
-        .cta-buttons a.secondary:hover {
-            background-color: #c0392b;
-        }
-
-        footer {
-            background-color: var(--secondary-color);
-            color: #ccc;
-            text-align: center;
-            padding: 30px 20px;
-            margin-top: 50px;
-            border-top: 5px solid var(--primary-color);
-        }
-
-        footer p {
-            font-size: 0.9em;
-            margin: 0;
-        }
-
-        footer a {
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 2.8em;
-            }
-            header p {
-                font-size: 1.2em;
-            }
-            .section {
-                padding: 30px 20px;
-            }
-            .section h2 {
-                font-size: 1.8em;
-            }
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-            .cta-buttons a {
-                display: block;
-                margin: 10px auto;
-                max-width: 250px;
-            }
-        }
-    </style>
+    
+    <!-- 引用您的外部 CSS 文件 -->
+    <link rel="stylesheet" href="./style.css">
+    
+    <!-- 核心 CSS 和 JS 已移至 style.css 和 app.js -->
 </head>
 <body>
-    <header>
-        <h1>TrusList</h1>
-        <p>An Open and Trustworthy Domain Ranking System</p>
-        <p style="font-size: 1.1em; max-width: 800px; margin-top: 25px; color: #e0e0e0;">
-            This repository presents **TrusList**, a novel framework designed to overcome the credibility issues of existing domain top lists. By incorporating a multi-dimensional evaluation, we aim for **higher stability, broader coverage, and better retention of regionally significant domains.**
-        </p>
+    <header class="header">
+        <div class="container">
+            <div class="hero">
+                <div class="hero-left">
+                    <h1 class="h-title">TrusList</h1>
+                    <p class="h-sub">Building a Trustworthy Domain Top List via Multi-Dimensional Assessments</p>
+                    <p class="small">融合行为、注册商声誉、TLD 可信度与链接结构,构建公开、稳定且抗操纵的域名排行榜。</p>
+
+                    <div class="cta" style="margin-top:18px">
+                        <!-- 论文链接：确保 main.pdf 在仓库根目录 -->
+                        <a class="btn" href="./main.pdf" target="_blank">下载论文 PDF</a>
+                        <!-- 查看源码链接：指向仓库主页 -->
+                        <a class="btn secondary" href="./" target="_blank">查看源码</a>
+                    </div>
+
+                    <!-- Three feature cards below buttons -->
+                    <div class="features">
+                        <div class="feature card">
+                            <h3>多维评估</h3>
+                            <p class="small">行为、机构与结构相结合，减少单源偏差。</p>
+                        </div>
+                        <div class="feature card">
+                            <h3>实验验证</h3>
+                            <p class="small">包含稳定性、抗攻击性与消融分析。</p>
+                        </div>
+                        <div class="feature card">
+                            <h3>抗操纵</h3>
+                            <p class="small">融合多种信号，降低单一维度的操纵空间。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right side: Dynamic word cloud with Top 100 domains -->
+                <div class="hero-right" id="wordcloudContainer">
+                    <div class="wordcloud-wrap">
+                        <canvas id="wordcloudCanvas" width="1400" height="1400"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
     </header>
 
-    <div class="container">
-        <section class="section">
-            <h2>Abstract & Motivation</h2>
-            <p>
-                Domain top lists are fundamental datasets for Internet measurement, security analysis, and Web ecosystem studies. However, their credibility is frequently compromised by susceptibility to manipulation, opaque ranking criteria, and geographic biases. To overcome these issues, this paper proposes **TrusList**, an open and trustworthy domain ranking system based on a multi-dimensional evaluation framework.
-            </p>
+    <main class="container">
+        <section style="margin-top:24px">
+            <h2>简介</h2>
+            <p class="small">域名排行（domain top lists）是互联网测量、安全分析与 Web 生态研究的重要基础数据，但现有榜单常因流量偏差、透明度不足和易被操纵而存在可信性问题。TrusList 提出一种开放且多维的评估框架，通过融合域名的行为访问特征、注册商与顶级域名（TLD）信誉以及域间依赖关系，构建更稳定、可解释且抗操纵的排名结果。我们采用被动 DNS 数据与多源交叉验证，将投票式排名与注册商/TLD/链接三项附加维度结合，加权生成最终排序。实验证明，TrusList 在时间稳定性、抗操纵性以及对区域性关键域名的保留能力等方面，相较传统基于流量的榜单显著提升。更多技术细节和评估结果请参见论文 PDF。</p>
         </section>
 
-        <section class="section">
-            <h2>Our Multi-dimensional Approach</h2>
-            <div class="features-grid">
-                <div class="feature-item">
-                    <h3>Beyond Conventional Metrics</h3>
-                    <p>Extends beyond conventional traffic metrics by incorporating spatio-temporal characteristics of domain queries, inter-domain dependencies, and the reputation of registrars and top-level domains.</p>
-                </div>
-                <div class="feature-item">
-                    <h3>Enhanced Reliability</h3>
-                    <p>Further reliability through cross-validation and integration with large-scale passive DNS data and existing domain lists, leveraging multi-source complementarity to mitigate manipulation and single-source bias.</p>
-                </div>
-                <div class="feature-item">
-                    <h3>Superior Performance</h3>
-                    <p>Extensive evaluation demonstrates that TrusList achieves broader coverage, higher stability, and better retention of regionally significant domains compared to existing alternatives.</p>
-                </div>
-            </div>
+        <section style="margin-top:28px">
+            <h2>如何使用</h2>
+            <ol class="small">
+                <li>下载仓库并打开 `main.pdf` 阅读论文。</li>
+                <li>若需重新编译，参照仓库根目录下的 <a href="./README.md">`README.md`</a>。</li>
+                <li>如需复现实验，请在 Issue 中留言或联系维护者。</li>
+            </ol>
         </section>
 
-        <section class="section">
-            <h2>Practical Utility & Case Studies</h2>
-            <p>
-                The practical utility of TrusList is illustrated through compelling case studies on **DGA domain detection**, showcasing its effectiveness in real-world security analysis scenarios. Our framework provides a robust foundation for more reliable and unbiased internet research.
-            </p>
-        </section>
+        <!-- 交互式实验可视化已移除；线上页面保留论文摘要/图像引用并以下载 PDF 为主 -->
 
-        <section class="section">
-            <h2>Resources & Access</h2>
-            <div class="cta-buttons">
-                <a href="https://github.com/truslist/truslist.github.io/blob/main/README.md" class="main-cta">View Full README</a>
-                <a href="#code-repository" class="secondary">Source Code</a>
-                <a href="#dataset-download" class="secondary">Partial Dataset</a>
-                <a href="#paper-link" class="secondary">Download Paper (PDF)</a>
-            </div>
-            <p style="text-align: center; margin-top: 30px; font-style: italic;">
-                The code and data are provided to ensure the reproducibility and extensibility of our research.
-            </p>
-        </section>
-    </div>
+        <div class="footer">
+            <p>© 2025 TrusList project • 本仓库仅用于学术研究与复现</p>
+        </div>
+    </main>
 
-    <footer>
-        <p>&copy; 2024 TrusList Project. All rights reserved.</p>
-        <p>Built with ❤️ via GitHub Pages</p>
-    </footer>
+    <!-- 外部库 (通过 CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wordcloud2.js/1.1.1/wordcloud2.min.js"></script>
+    
+    <!-- 引用精简后的外部 JavaScript 文件（仅用于首页头部词云） -->
+    <script src="./app.js"></script>
 </body>
 </html>
