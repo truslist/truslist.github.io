@@ -1,20 +1,70 @@
-🌐 TrusList: An Open and Trustworthy Domain Ranking System📝 论文信息 (Publication Information)论文标题: TrusList: Building a Trustworthy Domain Top List via Multi-Dimensional Assessments作者: [请在此处填写您的作者列表或匿名代号]发表于: [待定，例如：USENIX Security '24, ACM CCS '24, 或 Submitted to Journal X]摘要 (Abstract)Domain top lists are fundamental datasets for Internet measurement, security analysis, and Web ecosystem studies. However, their credibility is frequently compromised by susceptibility to manipulation, opaque ranking criteria, and geographic biases. To overcome these issues, this paper proposes TRUSLIST, an open and robust domain ranking system based on a multi-dimensional evaluation framework. Our method extends beyond conventional traffic metrics by incorporating spatio-temporal characteristics of domain queries, inter-domain dependencies, and the reputation of associated registrars and top-level domains. We further enhance reliability through cross-validation and integration with large-scale passive DNS data and existing domain lists, leveraging multi-source complementarity to mitigate manipulation and single-source bias. Extensive evaluation demonstrates that TRUSLIST achieves broader coverage, higher stability, and better retention of regionally significant domains compared to existing alternatives. The practical utility of TRUSLIST is illustrated through case studies on DGA domain detection.🛠️ 环境配置 (Setup & Prerequisites)本节将详细介绍运行 TrusList 所需的软件环境和依赖项。1. 软件环境本项目主要使用 Python 语言进行开发和数据处理。操作系统: Linux (推荐 Ubuntu 20.04+)Python 版本: Python 3.8+ (推荐 3.9 或 3.10)2. 依赖项安装所有必需的 Python 依赖项都列在 requirements.txt 文件中。# 切换到项目根目录
-cd /path/to/truslist.github.io/
 
-# 推荐使用虚拟环境
-python3 -m venv venv
-source venv/bin/activate
 
-# 安装所有依赖项
-pip install -r requirements.txt
-💾 数据集 (Dataset)由于原始 Passive DNS (PDNS) 数据集规模庞大且包含敏感信息，本仓库仅提供用于验证关键结果的部分、聚合或模拟数据。1. 数据来源TrusList 的运行需要以下主要输入：原始查询数据 (PDNS): 中国科学技术网 (CSTNet) 的递归服务器收集的 Passive DNS 记录。 这些数据反映了真实用户在 DNS 解析过程中的查询行为。辅助特征数据: 来自 Common Crawl 的域间超链接数据，以及从 SecRank 等来源检索的域名注册商信息，和一份策划的关键 TLD 列表。2. 仓库内包含的数据您可以在 ./data/ 文件夹中找到以下用于示例运行的文件：文件名描述./data/sample_queries.csv包含少量域名和它们聚合并加密后的查询特征数据，用于测试 TrusList 的核心评估模块。./data/raw_truslist_2024.csvTrusList 生成的最终域名列表（Top 100K），包含最终得分和关键的评估维度得分。⚙️ 运行指南 (Usage Guide)本节介绍如何从头运行 TrusList 框架或复现论文中的关键结果。1. 核心评估模块权重 (AHP Weights)本项目采用层次分析法 (AHP) 确定了四个主要评分模块的权重：模块符号权重值描述User Behavior$S_a$0.479基于改进 Borda 计数的用户查询行为评分。TLD Credibility$T_c$0.338基于顶级域名审核严格程度的信誉评分。Registrar Reputation$R_{score}$0.112基于注册商恶意率、普及度及合规性的信誉评分。Link Structure$L_s$0.071基于权威域名链接传播的结构重要性评分。2. 运行核心评估流程要运行完整的 TrusList 评估流程（从特征提取到最终排名），请使用主运行脚本：# 格式：python3 [主脚本名] --input [输入数据] --output [输出列表] --config [配置文件]
-python3 run_truslist.py --input ./data/sample_queries.csv --output ./output/final_list.csv --config ./config/default.yaml
-主脚本名: run_truslist.py (请确保您的实际脚本名与之匹配)配置文件: config/default.yaml。该文件应包含系统超参数，例如：用户行为模块中的 KL 散度平滑参数 ($\alpha$)。注册商信誉模块中的 贝叶斯平滑参数 ($k$)。四个评分模块的 AHP 权重 (如上表所示)。3. 复现关键图表要复现论文中最能体现 TrusList 抗攻击能力的关键图表（例如，图 2：攻击弹性曲面），请运行对应的复现脚本：# 复现图 2：攻击弹性曲面（Attack-resilience surfaces）
-python3 ./scripts/plot_attack_resilience.py --input ./output/attack_log.csv --figure-output ./figures/Fig2_Attack_Resilience.png
-📜 许可证 (License)本项目使用 MIT License。详情请见 LICENSE 文件。引用 (Citation)如果您在研究中使用了 TrusList 框架、代码或数据集，请引用我们的论文：@inproceedings{[待定，例如：TrusList2024],
-  title={{TrusList: Building a Trustworthy Domain Top List via Multi-Dimensional Assessments}},
-  author={[您的作者列表]},
-  booktitle={[待定：会议或期刊名称]},
-  year={[待定：年份]}
-}
-(在论文被接受后，请务必更新准确的引用信息)
+# TRUSLIST: 一种基于多维度评估的受信赖域名 Top List 构建方法
+
+## 摘要
+
+TRUSLIST 提出了一种**开放、稳健且综合性的域名排名系统**，旨在解决现有域名 Top List 在易操纵性、方法不透明性和地域代表性偏差方面的问题。本系统通过整合**多维度评估框架**，超越了传统的基于流量的排名指标，构建了一个具备更高时间稳定性、更强抗攻击能力和更均衡代表性的 Web 生态系统快照。
+
+## Ⅰ. 核心方法论
+
+TRUSLIST 的最终域名评分是基于四个独立评分模块的加权求和。各模块权重通过**层次分析法 (AHP)** 确定，并经过严格的一致性检验，确保了评估体系的逻辑一致性和透明度。
+
+| 模块 | 关键特征 | 权重 (AHP) |
+| :--- | :--- | :--- |
+| **1. 用户行为评分 ($S_d$)** | 基于改进的 Borda 计分法，通过大规模被动 DNS (PDNS) 数据推断域名偏好。采用 **KL 散度** 计算 IP 的行为一致性，并使用**指数加权移动平均 (EWMA)** 平滑处理，以动态分配 IP 权重 ($W_i$)，有效减轻了网关 IP 偏差和操纵风险。 | 0.479 |
+| **2. TLD 信誉评分 ($T_c$)** | 根据顶级域名的注册政策严格性进行分层评估。要求严格验证的 TLD (如 `.gov`, `.edu`) 由于其低滥用率和官方认证要求，被赋予更高的信誉值，从而保障了关键性基础域名的代表性。 | 0.338 |
+| **3. 注册商信誉评分 ($R_{score}$)** | 结合了注册商的**流行度 ($R_P$)、经贝叶斯平滑的恶意率 ($R_S$)** 和**合规性 ($R_C$)** 三个维度，通过几何平均集成。该模块用于识别和惩罚恶意域名聚集的低信誉注册商。 | 0.112 |
+| **4. 域间链接结构评分 ($L_{s}$)** | 借鉴 PageRank 原理，但将分析范围限制于权威参考域名集。根据域名被权威、可信赖域名引用的程度来评估其重要性和可信度。 | 0.071 |
+
+最终的聚合域名分数 $S_{final}$ 计算公式如下，其中 $w_i$ 为对应模块的权重：
+$$S_{final} = w_a S_d + w_b T_c + w_c R_{score} + w_d L_s$$
+
+## Ⅱ. 性能评估与验证
+
+### 1. 临时稳定性
+
+我们通过计算七天内的日间 Spearman 秩相关系数来衡量排名稳定性。
+
+| 排名系统 | 7天连续日间 Spearman 相关系数范围 |
+| :--- | :--- |
+| **TRUSLIST** | **0.94~0.96** |
+| SecRank & Umbrella | 0.87~0.94 |
+
+**结论：** TRUSLIST 排名展现出更高的时序一致性，证明了其多因素融合方法在保持排名合理性的同时，有效降低了每日波动。
+
+### 2. 抗攻击鲁棒性
+
+我们针对 DGA (Domain Generation Algorithm) 风格的流量膨胀攻击进行了测试。
+
+* **结果：** 在不同攻击强度下，TRUSLIST 始终能保持恶意域名的高排名（即低穿透性），显著优于仅基于流量的基线 SecRank。这验证了系统的稳健性。
+
+### 3. Ablation 研究（模块贡献）
+
+通过移除单个模块来量化其对稳定性和抗攻击性的贡献。负值表示性能退化，数值的绝对值越大，贡献度越高。
+
+| 移除模块 | 稳定性下降 (Ranking Stability) | 抗攻击性下降 (Avg. Rank) |
+| :--- | :--- | :--- |
+| - 注册商信誉 | **-0.0311** | **-3167.71** |
+| - TLD 信誉 | -0.0043 | -192.05 |
+| - 链接结构 | -0.0003 | -142.62 |
+
+**结论：** 注册商信誉模块对模型的鲁棒性贡献最为关键。其移除会导致稳定性的显著下降，并使恶意域名更容易渗透至高排名位置。
+
+## Ⅲ. 可复现性与数据访问
+
+本项目方法论是**开放**的，且实验工具和经脱敏的数据集已发布，以支持社区进行独立的验证和互联网测量研究。
+
+* **项目网站/工具和数据集：** `https://truslist.github.io`
+
+## Ⅳ. 联系方式与许可证
+
+### 联系方式
+
+如有疑问或寻求合作，请通过以下方式联系我们：
+
+[csw552211@outlook.com]
+
+### 许可证
+
+本项目依据 [MIT] 许可证开源发布。请参阅 `LICENSE` 文件了解详细信息。
