@@ -1,0 +1,160 @@
+/* Simple, modern stylesheet for the project homepage */
+:root{--bg:#f6f8fb;--brand:#0b63d1;--muted:#6b7280;--card:#ffffff}
+*{box-sizing:border-box;font-family:Inter, 'Segoe UI', Roboto, Arial, sans-serif}
+body{margin:0;background:var(--bg);color:#0f1724}
+.header{background:linear-gradient(90deg,#ffffff 0%, #f1f6ff 100%);padding:80px 40px 60px;animation:fadeIn 0.8s ease-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.container{max-width:1600px;margin:0 auto;padding:0 48px 0 48px}
+
+.hero {
+  /* Use CSS Grid to create a robust two-column layout: fixed (but responsive) left column + flexible right column */
+  display: grid;
+  /* slightly wider left column so cloud can be larger without overlapping */
+  grid-template-columns: minmax(320px, 720px) 1fr;
+  align-items: center;
+  gap: 40px;
+}
+.hero-left {
+  /* keep content constrained so it won't overflow into the cloud */
+  max-width: 620px;
+  /* add a little internal left padding so content doesn't feel pressed to the page edge */
+  padding-left: 12px;
+}
+.hero-right {
+  /* right column takes remaining space, word cloud will scale within it */
+  min-width: 520px; /* increase min width to keep cloud legible */
+  display: flex;
+  align-items: center;
+  /* align the cloud to the far right so it doesn't approach the left content */
+  justify-content: flex-end;
+  position: relative; /* keep overlay positioning working */
+  padding-right: 96px; /* push cloud further right for breathing room */
+  overflow: visible;
+}
+.hero-right canvas {
+  transition: filter 0.2s ease;
+}
+
+/* wrapper to keep the word cloud area a square and control its size */
+.wordcloud-wrap{
+  /* make the cloud larger and responsive; cap at 800px */
+  width: min(800px, 55vw); /* responsive; caps at 800px */
+  aspect-ratio: 1 / 1; /* enforce square */
+  position: relative; /* overlay canvas will be appended here by JS */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ensure the canvas fills the square wrapper exactly */
+.wordcloud-wrap canvas{
+  width:100% !important;
+  height:100% !important;
+  max-width:100%;
+  max-height:100%;
+  display:block;
+}
+
+/* Center the main content sections (简介 / 如何使用) for a balanced look */
+main.container section{
+  text-align: center; /* center headings and inline content */
+  max-width: 980px;   /* constrain width for comfortable reading */
+  margin: 0 auto 48px; /* center block horizontally and add larger bottom spacing */
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+/* Make paragraphs centered but keep them block-level for spacing */
+main.container section p.small{
+  margin: 0 auto;
+  color: var(--muted);
+}
+
+/* Keep ordered lists visually centered while keeping list items left-aligned */
+main.container section ol.small{
+  display: inline-block; /* centers the list block */
+  text-align: left;      /* keep numbers and item text left-aligned */
+  margin: 0 auto;
+  padding-left: 20px;    /* standard list padding */
+  max-width: 720px;      /* limit width so list stays readable */
+}
+
+/* Typography refinement for the intro and usage sections */
+/* Use Montserrat for headings and Open Sans for body text (loaded in index.html) */
+main.container section h2{
+  font-family: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #0f1724;
+}
+
+main.container section p.small{
+  font-family: 'Open Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--muted);
+  margin-top: 0;
+}
+
+main.container section ol.small{
+  font-family: 'Open Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--muted);
+}
+
+main.container section ol.small li{
+  margin-bottom: 10px;
+}
+
+
+
+/* Remove floating animations - static word cloud only */
+
+/* Typography and elements */
+h1,h2,h3{margin:0;line-height:1.2}
+.h-title{font-size:48px;font-weight:700;color:#0f1724}
+.h-sub{font-size:20px;margin-top:8px;color:#374151}
+.small{font-size:14px;color:var(--muted)}
+
+/* Cards */
+.card{background:var(--card);padding:18px;border-radius:10px;box-shadow:0 6px 20px rgba(15,23,36,0.04);transition:transform 0.3s ease, box-shadow 0.3s ease}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(11,99,209,0.12)}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:32px}
+.feature{background:var(--card);padding:14px;border-radius:8px;color:#0f1724;animation:slideUp 0.6s ease-out backwards}
+.feature h3{font-size:16px;margin-bottom:6px}
+.feature:nth-child(1){animation-delay:0.1s}
+.feature:nth-child(2){animation-delay:0.2s}
+.feature:nth-child(3){animation-delay:0.3s}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* Buttons */
+.btn{background:var(--brand);color:white;padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:600;transition:all 0.3s ease;display:inline-block}
+.btn:hover{transform:scale(1.05);box-shadow:0 8px 20px rgba(11,99,209,0.3)}
+.btn.secondary{background:transparent;color:var(--brand);border:2px solid rgba(11,99,209,0.12)}
+.btn.secondary:hover{background:rgba(11,99,209,0.06)}
+.cta{display:flex;gap:12px;flex-wrap:wrap}
+
+/* Responsive design */
+@media (max-width: 900px) {
+  .hero {
+    flex-direction: column;
+  }
+  .hero-left, .hero-right {
+    min-width: 100%;
+    max-width: 100%;
+  }
+  .h-title{font-size:36px}
+  .features{grid-template-columns:1fr}
+}
+
+/* Footer: center the copyright/statement and add breathing room from content above */
+.footer{
+  text-align: center;
+  margin-top: 48px; /* space from preceding content */
+  padding: 28px 8px 48px; /* comfortable vertical padding */
+  color: var(--muted);
+  font-size: 14px;
+}
+.footer p{margin:6px 0}
